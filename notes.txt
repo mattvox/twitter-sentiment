@@ -1,0 +1,12 @@
+PROCESSES
+- log in to twitter (tweepy?)
+- retrieve tweets
+- process/clean tweets
+- analyze tweet for sentiment
+- pass data onto user or db
+
+QUESTIONS
+- should I be using Django?
+- should specific data be provided, or analysis performed in real-time?
+  - calculations performed ahead of time on specific topics
+- how fast will real-time analysis be?
