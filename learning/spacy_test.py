@@ -8,6 +8,8 @@
 
 import random
 
+from textblob import TextBlob
+
 from spacy.en import English
 
 from sklearn.feature_extraction.stop_words import ENGLISH_STOP_WORDS as stopwords  # noqa: E501
@@ -46,10 +48,18 @@ def clean_text(text):
 def spacy_tokenizer(sentence):
     tokens = parser(sentence)
 
-    tokens = [tok.lemma_.lower().strip() if tok.lemma_ != "-PRON-" else tok.lower_ for tok in tokens]  # noqa: E501
+    # for word in tokens:
+    #     print(word, word.pos_)
 
-    tokens = [tok for tok in tokens if (tok not in stopwords and tok not in punctuations)]  # noqa: E501
+    # tokens = [tok.lemma_.lower().strip() if tok.lemma_ != "-PRON-" else tok.lower_ for tok in tokens]  # noqa: E501
+
+    tokens = [tok.lemma_.lower().strip() for tok in tokens]
+
+    # tokens = [tok for tok in tokens if (tok not in stopwords and tok not in punctuations)]  # noqa: E501
     # tokens = [tok for tok in tokens if (tok not in punctuations)]  # noqa: E501
+
+    # print(tokens)
+
     return tokens
 
 
@@ -118,7 +128,7 @@ train = []
 test = []
 
 for index, tweet in enumerate(all_tweets):
-    if index % 10:
+    if index % 5:
         test.append(tweet)
     else:
         train.append(tweet)
@@ -164,7 +174,7 @@ print('test length: ', len(test))
 # testing_fit = vectorizer.fit_transform(x[0] for x in test)
 #
 # feature_names = vectorizer.get_feature_names()
-
+#
 # print(testing_fit.toarray().sum(axis=0))
 # print('FEATURE: ', feature_names)
 
@@ -172,10 +182,39 @@ print('test length: ', len(test))
 pipe.fit([x[0] for x in train], [x[1] for x in train])
 
 pred_data = pipe.predict([x[0] for x in test])
+
 for (sample, pred) in zip(test, pred_data):
     if sample[1] != pred:
-        print(sample, pred)
+
+        blob = TextBlob(sample[0])
+        print(sample, pred, blob.sentiment.polarity)
+
 print("Accuracy:", accuracy_score([x[1] for x in test], pred_data))
+
+# TextBlob
+# testing_blob = TextBlob(test)
+
+count = 0
+wrong = 0
+
+for (tweet, pred) in test:
+    blob = TextBlob(tweet)
+
+    if pred == 'neg':
+        if blob.sentiment.polarity > 0:
+            wrong += 1
+    elif pred == 'pos':
+        if blob.sentiment.polarity < 0:
+            wrong += 1
+
+    count += 1
+
+print('number of wrong: ', wrong)
+print('total number of tweets tested: ', count)
+print('text blob accuracy score: ', ((count - wrong) / count))
+
+    # print(blob.sentiment.polarity)
+
 
 # for word in stopwords:
 #     if word is "not" or word is "no":
