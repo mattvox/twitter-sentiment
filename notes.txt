@@ -1,0 +1,11 @@
+- Pass search term to Django
+
+- Fetch tweets based on search term
+
+- ??? Store tweets in database ???
+
+- Pass tweets in for analysis
+
+- ??? Store tweets and analysis data in database ???
+
+- Return results
