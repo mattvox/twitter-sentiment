@@ -1,8 +1,11 @@
-from django.shortcuts import render
+# from django.shortcuts import render
 
 from django.http import Http404, JsonResponse
 
+import get_tweets
 
-def get_tweets(request):
+
+def tweets(search):
     """ Fetches Tweets with Tweepy """
-    return JsonResponse({"data": {}})
+    new_tweets = get_tweets.fetch_tweets(search)
+    return JsonResponse({new_tweets})

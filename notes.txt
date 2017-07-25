@@ -9,3 +9,7 @@
 - ??? Store tweets and analysis data in database ???
 
 - Return results
+
+ENDPOINTS
+
+/api?search=
